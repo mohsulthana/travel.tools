@@ -1,25 +1,74 @@
 import Vue from 'vue';
-import Router from 'vue-router';
-import Home from './views/Home.vue';
+import VueRouter from 'vue-router';
+import routes from './routes';
+import store from './store/index';
+// import Landing from './views/LandingPage.vue';
+// import Blog from './views/Blog.vue';
+// import Artikel from './views/Artikel.vue';
+// import Detail from './views/DetailArtikel.vue';
+// import Gallery from './views/Gallery.vue';
 
-Vue.use(Router);
+// Admin
+// import Dashboard from './views/admin/Dashboard.vue';
 
-export default new Router({
+
+Vue.use(VueRouter);
+
+export default new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home,
+  base: '/',
+  routes: routes.map(route => ({
+    path: route.path,
+    name: route.name,
+    component: route.component,
+    beforeEnter(to, from, next) {
+      store.dispatch('commonModule/updateLayout', route.layout);
+      next();
     },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
-    },
-  ],
+  })),
 });
+
+// export default new Router({
+//   base: '/',
+//   mode: 'history',
+//   routes: [
+//     {
+//       path: '/admin',
+//       name: 'Admin',
+//       redirect: { name: 'Dashboard' },
+//       children: [
+//         {
+//           path: 'dashboard',
+//           name: 'Dashboard',
+//           layout: 'adminLayout',
+//           component: Dashboard,
+//         },
+//       ],
+//     },
+//     {
+//       path: '/',
+//       name: 'Landing',
+//       component: Landing,
+//     },
+//     {
+//       path: '/blog',
+//       name: 'Blog',
+//       component: Blog,
+//     },
+//     {
+//       path: '/artikel',
+//       name: 'Artikel',
+//       component: Artikel,
+//     },
+//     {
+//       path: '/detail/artikel',
+//       name: 'Detail-artikel',
+//       component: Detail,
+//     },
+//     {
+//       path: '/home/gallery',
+//       name: 'Gallery',
+//       component: Gallery,
+//     },
+//   ],
+// });
